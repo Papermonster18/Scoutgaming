@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>童軍冒險大亨 - 資源與地契管理</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome圖示 -->
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #00ff00;
+        }
+        .resource-bag, .property-section, .items-table {
+            border: 2px solid #00ff00;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .resource-item {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+        .resource-item i {
+            margin-right: 10px;
+            color: #00ff00;
+        }
+        .property-list {
+            min-height: 100px;
+            background-color: #1a1a1a;
+            padding: 10px;
+        }
+        .property-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        .property-item i {
+            margin-right: 10px;
+            color: #00ff00;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #00ff00;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #004d00; /* 深綠色標題列 */
+        }
+        td i {
+            margin-right: 5px;
+            color: #00ff00;
+        }
+        button {
+            background-color: #00ff00;
+            border: none;
+            padding: 5px 10px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #00cc00;
+        }
+        .reset-btn {
+            display: block;
+            margin: 20px auto;
+            background-color: #ff0000;
+        }
+        .reset-btn:hover {
+            background-color: #cc0000;
+        }
+    </style>
+</head>
+<body>
+    <h1>童軍冒險大亨 - 資源與地契管理</h1>
+
+    <!-- 資源袋 -->
+    <div class="resource-bag">
+        <h2>資源袋</h2>
+        <div class="resource-item">
+            <i class="fas fa-tree"></i> 木材: <span id="wood">0</span>
+            <button onclick="addResource('wood')">獲得</button>
+            <button onclick="removeResource('wood')">拋棄</button>
+        </div>
+        <div class="resource-item">
+            <i class="fas fa-tint"></i> 水源: <span id="water">0</span>
+            <button onclick="addResource('water')">獲得</button>
+            <button onclick="removeResource('water')">拋棄</button>
+        </div>
+        <div class="resource-item">
+            <i class="fas fa-utensils"></i> 食物: <span id="food">0</span>
+            <button onclick="addResource('food')">獲得</button>
+            <button onclick="removeResource('food')">拋棄</button>
+        </div>
+        <p>總量: <span id="total-resources">0</span></p>
+    </div>
+
+    <!-- 持有地產 -->
+    <div class="property-section">
+        <h2>持有地產</h2>
+        <div>
+            <h3>初級營地</h3>
+            <select id="property-select">
+                <option value="">選擇地契</option>
+                <option value="松林">松林</option>
+                <option value="橡樹林">橡樹林</option>
+                <option value="楓林">楓林</option>
+                <option value="丘陵">丘陵</option>
+                <option value="草原">草原</option>
+                <option value="沼澤">沼澤</option>
+                <option value="森林步道">森林步道</option>
+                <option value="湖邊">湖邊</option>
+                <option value="溪流">溪流</option>
+                <option value="瀑布">瀑布</option>
+                <option value="河流">河流</option>
+                <option value="冰川">冰川</option>
+                <option value="濕地">濕地</option>
+                <option value="山腳">山腳</option>
+                <option value="峽谷">峽谷</option>
+                <option value="高原">高原</option>
+                <option value="山峰">山峰</option>
+                <option value="洞穴">洞穴</option>
+                <option value="沙漠">沙漠</option>
+                <option value="峭壁">峭壁</option>
+                <option value="森林">森林</option>
+                <option value="湖泊">湖泊</option>
+                <option value="溪谷">溪谷</option>
+                <option value="高地">高地</option>
+                <option value="雪山">雪山</option>
+                <option value="岩壁">岩壁</option>
+                <option value="橡樹林">橡樹林</option>
+                <option value="松林">松林</option>
+            </select>
+            <button onclick="addProperty()">購買</button>
+            <div class="property-list" id="basic-camps"></div>
+        </div>
+        <div>
+            <h3>高級基地</h3>
+            <div class="property-list" id="advanced-bases"></div>
+        </div>
+    </div>
+
+    <!-- 道具表格 -->
+    <div class="items-table">
+        <h2>道具管理</h2>
+        <table>
+            <tr>
+                <th>道具</th>
+                <th>功能</th>
+                <th>持有數量</th>
+            </tr>
+            <tr>
+                <td><i class="fas fa-compass"></i> 指南針</td>
+                <td>擲骰子後可以選擇順時針或逆時針前進一次</td>
+                <td>
+                    <span id="compass">0</span>
+                    <button onclick="addItem('compass')">+</button>
+                    <button onclick="removeItem('compass')">-</button>
+                </td>
+            </tr>
+            <tr>
+                <td><i class="fas fa-map"></i> 地圖</td>
+                <td>擲到相同點數可以使用，直達擁有的某一塊地契，可以升級，若經過起點可以領取獎金</td>
+                <td>
+                    <span id="map">0</span>
+                    <button onclick="addItem('map')">+</button>
+                    <button onclick="removeItem('map')">-</button>
+                </td>
+            </tr>
+            <tr>
+                <td><i class="fas fa-tent"></i> 高級帳篷</td>
+                <td>此輪不擲骰子，直達中立區</td>
+                <td>
+                    <span id="tent">0</span>
+                    <button onclick="addItem('tent')">+</button>
+                    <button onclick="removeItem('tent')">-</button>
+                </td>
+            </tr>
+            <tr>
+                <td><i class="fas fa-link"></i> 童軍繩</td>
+                <td>抵免一次挑戰卡的效果</td>
+                <td>
+                    <span id="rope">0</span>
+                    <button onclick="addItem('rope')">+</button>
+                    <button onclick="removeItem('rope')">-</button>
+                </td>
+            </tr>
+            <tr>
+                <td><i class="fas fa-flashlight"></i> 手電筒</td>
+                <td>若停留在其他玩家的營地可不支付過路費一次</td>
+                <td>
+                    <span id="flashlight">0</span>
+                    <button onclick="addItem('flashlight')">+</button>
+                    <button onclick="removeItem('flashlight')">-</button>
+                </td>
+            </tr>
+        </table>
+        <p>道具總量: <span id="total-items">0</span></p>
+    </div>
+
+    <!-- 重新開始按鈕 -->
+    <button class="reset-btn" onclick="resetGame()">遊戲重新開始</button>
+
+    <script>
+        // 資源初始值
+        let resources = {
+            wood: 0,
+            water: 0,
+            food: 0
+        };
+
+        // 道具初始值
+        let items = {
+            compass: 0,
+            map: 0,
+            tent: 0,
+            rope: 0,
+            flashlight: 0
+        };
+
+        // 持有地產
+        let basicCamps = [];
+        let advancedBases = [];
+
+        // 更新資源顯示
+        function updateResources() {
+            document.getElementById('wood').innerText = resources.wood;
+            document.getElementById('water').innerText = resources.water;
+            document.getElementById('food').innerText = resources.food;
+            document.getElementById('total-resources').innerText = 
+                resources.wood + resources.water + resources.food;
+        }
+
+        // 更新道具顯示
+        function updateItems() {
+            document.getElementById('compass').innerText = items.compass;
+            document.getElementById('map').innerText = items.map;
+            document.getElementById('tent').innerText = items.tent;
+            document.getElementById('rope').innerText = items.rope;
+            document.getElementById('flashlight').innerText = items.flashlight;
+            document.getElementById('total-items').innerText = 
+                items.compass + items.map + items.tent + items.rope + items.flashlight;
+        }
+
+        // 增加資源（獲得）
+        function addResource(type) {
+            resources[type]++;
+            updateResources();
+        }
+
+        // 減少資源（拋棄）
+        function removeResource(type) {
+            if (resources[type] > 0) {
+                resources[type]--;
+                updateResources();
+            }
+        }
+
+        // 增加道具
+        function addItem(type) {
+            if (items[type] < 5) {
+                items[type]++;
+                updateItems();
+            } else {
+                alert(`${type === 'compass' ? '指南針' : type === 'map' ? '地圖' : type === 'tent' ? '高級帳篷' : type === 'rope' ? '童軍繩' : '手電筒'} 已達上限（5個）！`);
+            }
+        }
+
+        // 減少道具
+        function removeItem(type) {
+            if (items[type] > 0) {
+                items[type]--;
+                updateItems();
+            }
+        }
+
+        // 購買地契
+        function addProperty() {
+            let selected = document.getElementById('property-select').value;
+            if (selected && !basicCamps.includes(selected) && !advancedBases.includes(selected)) {
+                basicCamps.push(selected);
+                renderProperties();
+            }
+        }
+
+        // 升級營地
+        function upgradeProperty(index) {
+            let property = basicCamps[index];
+            if (resources.water >= 3 && resources.wood >= 2 && resources.food >= 1) {
+                if (confirm(`是否耗費3水源、2木材與1食物將${property}升級為基地？`)) {
+                    resources.water -= 3;
+                    resources.wood -= 2;
+                    resources.food -= 1;
+                    basicCamps.splice(index, 1);
+                    advancedBases.push(property);
+                    updateResources();
+                    renderProperties();
+                }
+            } else {
+                alert("資源不足，無法升級！");
+            }
+        }
+
+        // 降級基地
+        function downgradeProperty(index) {
+            let property = advancedBases[index];
+            advancedBases.splice(index, 1);
+            basicCamps.push(property);
+            renderProperties();
+        }
+
+        // 刪除地契
+        function deleteProperty(type, index) {
+            if (type === 'basic') {
+                basicCamps.splice(index, 1);
+            } else {
+                advancedBases.splice(index, 1);
+            }
+            renderProperties();
+        }
+
+        // 渲染地產列表
+        function renderProperties() {
+            let basicList = document.getElementById('basic-camps');
+            let advancedList = document.getElementById('advanced-bases');
+            basicList.innerHTML = '';
+            advancedList.innerHTML = '';
+
+            basicCamps.forEach((property, index) => {
+                let div = document.createElement('div');
+                div.className = 'property-item';
+                div.innerHTML = `<i class="fas fa-campground"></i> ${property} 
+                    <button onclick="upgradeProperty(${index})">升級</button>
+                    <button onclick="deleteProperty('basic', ${index})">刪除</button>`;
+                basicList.appendChild(div);
+            });
+
+            advancedBases.forEach((property, index) => {
+                let div = document.createElement('div');
+                div.className = 'property-item';
+                div.innerHTML = `<i class="fas fa-fort-awesome"></i> ${property} 
+                    <button onclick="downgradeProperty(${index})">降級</button>
+                    <button onclick="deleteProperty('advanced', ${index})">刪除</button>`;
+                advancedList.appendChild(div);
+            });
+        }
+
+        // 遊戲重新開始
+        function resetGame() {
+            resources = { wood: 0, water: 0, food: 0 };
+            items = { compass: 0, map: 0, tent: 0, rope: 0, flashlight: 0 };
+            basicCamps = [];
+            advancedBases = [];
+            updateResources();
+            updateItems();
+            renderProperties();
+        }
+
+        // 初始化
+        updateResources();
+        updateItems();
+    </script>
+</body>
+</html>
